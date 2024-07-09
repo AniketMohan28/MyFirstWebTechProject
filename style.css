@@ -1,0 +1,81 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #C1EEFF;
+    text-align: center;
+
+}
+header {
+    font-size: 40px;
+}
+.container {
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.game {
+    height: 60vmin;
+    width: 60vmin;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5vmin;
+}
+.box {
+    height: 18vmin;
+    width: 18vmin;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+    font-size: 8vmin;
+    color:red;
+    background-color: yellow;
+}
+#Reset_button{
+    padding: 1rem;
+    font-size: 1.50rem;
+    color: white;
+    border-radius: 1rem;
+    background-color: black;
+    border: none;
+
+}
+#NewButton{
+    padding: 1rem;
+    font-size: 1.50rem;
+    color: white;
+    border-radius: 1rem;
+    background-color: black;
+    border: none;
+
+}
+#Message{
+    padding: 1rem;
+    color: brown;
+    font-size: 5vmin;
+
+
+}
+.Message-container{
+    height: 30vmin;
+}
+.hide
+{
+    display: none;
+}
+
+
+
+footer {
+    position: fixed; /* Fixed position */
+    bottom: 0; /* Stick it to the bottom */
+    width: 100%; /* Full width */
+    background-color: #333; /* Background color */
+    color: #fff; /* Text color */
+    padding: 20px; /* Padding around content */
+    text-align: center; /* Align text to the center */
+  }
