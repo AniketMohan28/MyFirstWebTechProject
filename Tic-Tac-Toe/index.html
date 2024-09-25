@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            background-image: url('static/images/bg1.jpg'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.3; /* Adjust the opacity to your preference */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Ensure the content is above the background */
+        }
+        .logo {
+    font-size: 50px; /* Increase font size for better visibility */
+    font-weight: bold; /* Make it bold */
+    background-color: #ff6b6b; /* Solid background color */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Add padding around the text */
+    border-radius: 10px; /* Rounded corners */
+    margin-bottom: 10px; /* Space below the logo */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adding shadow for depth */
+    transition: transform 0.3s; /* Transition effect for hover */
+}
+.logo:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+header {
+    font-size: 40px;
+    color: #fff; /* White color for better contrast */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adding shadow for depth */
+    position: relative; /* Positioning context for the message */
+    z-index: 1; /* Ensure the header is above the background */
+}
+        
+        .container {
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .game {
+            height: 60vmin;
+            width: 60vmin;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5vmin;
+        }
+        .box {
+            height: 18vmin;
+            width: 18vmin;
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+            font-size: 8vmin;
+            color: red;
+            background-color: lightblue; /* Changed to light blue */
+            transition: background-color 0.3s, transform 0.2s; /* Transition effects */
+        }
+        .box:hover {
+            background-color: deepskyblue; /* Darker blue on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+        #Reset_button,
+        #NewButton {
+            padding: 1rem;
+            font-size: 1.50rem;
+            color: white;
+            border-radius: 1rem;
+            background-color: black;
+            border: none;
+            transition: background-color 0.3s; /* Transition effects */
+        }
+        #Reset_button:hover,
+        #NewButton:hover {
+            background-color: darkgray; /* Change color on hover */
+        }
+        #Message {
+            padding: 1rem;
+            color: brown;
+            font-size: 5vmin;
+        }
+        .Message-container {
+    position: fixed; /* Fixed position for centering */
+    top: 50%; /* Position it in the middle of the viewport */
+    left: 50%; /* Position it in the middle of the viewport */
+    transform: translate(-50%, -50%); /* Adjust to center it */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    padding: 20px; /* Padding for the message */
+    border-radius: 5px; /* Rounded corners */
+    z-index: 2; /* Ensure it's above the game board */
+    display: flex; /* Use flexbox for centering */
+    flex-direction: column; /* Stack the elements vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+}
+
+        .hide {
+            display: none;
+        }
+        footer {
+            position: fixed; /* Fixed position */
+            bottom: 0; /* Stick it to the bottom */
+            width: 100%; /* Full width */
+            background-color: #333; /* Background color */
+            color: #fff; /* Text color */
+            padding: 20px; /* Padding around content */
+            text-align: center; /* Align text to the center */
+        }
+    </style>
+</head>
+<body>
+    <div class="Message-container hide">
+        <p id="Message">Winner</p>
+        <button id="NewButton">New Game</button>
+    </div>
+    <main>
+        <header>
+            <div class="logo">Tic-Tac-Toe</div>
+           
+        </header>
+        <div class="Message-container hide">
+            <p id="Message">Winner</p>
+            <button id="NewButton">New Game</button>
+        </div>
+        
+        <div class="container">
+            <div class="game">
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+                <button class="box"></button>
+            </div>
+        </div>
+        <button id="Reset_button">Reset</button>
+    </main>
+    <script>
+        let boxes = document.querySelectorAll(".box");
+        let ResetButton = document.querySelector("#Reset_button");
+        let NewGameButton = document.querySelector("#NewButton");
+        let MessageContainer = document.querySelector(".Message-container");
+        let Message = document.querySelector("#Message");
+        let turnO = true;
+        let Count = 0;
+
+        const WinningPattern = [
+            [0, 1, 2],
+            [0, 3, 6],
+            [0, 4, 8],
+            [1, 4, 7],
+            [2, 5, 8],
+            [2, 4, 6],
+            [3, 4, 5],
+            [6, 7, 8],
+        ];
+
+        const ResetGame = () => {
+            turnO = true;
+            Count = 0;
+            enableBoxes();
+            MessageContainer.classList.add("hide");
+            boxes.forEach((box) => {
+                box.innerText = "";
+            });
+        };
+
+        boxes.forEach((box) => {
+            box.addEventListener("click", () => {
+                if (turnO == true) {
+                    box.innerText = "O";
+                    turnO = false;
+                } else {
+                    box.innerText = "X";
+                    turnO = true;
+                }
+                box.disabled = true;
+                Count++;
+                let Winner = checkWinner();
+
+                if (Count === 9 && !Winner) {
+                    GameOver();
+                }
+            });
+        });
+
+        const GameOver = () => {
+            Message.innerText = `Game Over.`;
+            MessageContainer.classList.remove("hide");
+            disableBoxes();
+        };
+
+        const disableBoxes = () => {
+            for (let box of boxes) {
+                box.disabled = true;
+            }
+        };
+
+        const enableBoxes = () => {
+            for (let box of boxes) {
+                box.disabled = false;
+            }
+        };
+
+        const ShowWinner = (Winner) => {
+            Message.innerText = `Congratulations! Winner is ${Winner}`;
+            MessageContainer.classList.remove("hide");
+            disableBoxes();
+        };
+
+        const checkWinner = () => {
+            for (let pattern of WinningPattern) {
+                let val1 = boxes[pattern[0]].innerText;
+                let val2 = boxes[pattern[1]].innerText;
+                let val3 = boxes[pattern[2]].innerText;
+
+                if (val1 != "" && val2 != "" && val3 != "") {
+                    if (val1 === val2 && val2 === val3) {
+                        console.log("Winner", val1);
+                        ShowWinner(val1);
+                        disableBoxes();
+                    }
+                }
+            }
+        };
+
+        NewGameButton.addEventListener("click", ResetGame);
+        ResetButton.addEventListener("click", ResetGame);
+    </script>
+</body>
+<footer>
+    Contact @AniketSrivastava-8651806649
+</footer>
+</html>
